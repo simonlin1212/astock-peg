@@ -1,0 +1,13 @@
+node_modules/
+.next/
+.env
+.env.local
+.env.production
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+analyses/*/
+!analyses/index.json
+web/portfolio.json
+web/.claude/
+开发日志.md

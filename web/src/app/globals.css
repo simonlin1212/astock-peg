@@ -1,0 +1,582 @@
+@import "tailwindcss";
+
+/* === Neon Quant Design System Tokens === */
+
+@theme {
+  /* Surface — deep space */
+  --color-bg: #06060e;
+  --color-surface: #0c0c1a;
+  --color-surface-2: #141428;
+  --color-surface-3: #1c1c38;
+
+  /* Text — cool silver */
+  --color-text: #e8e8f0;
+  --color-text-2: #a0a0c0;
+  --color-text-3: #6868a0;
+  --color-text-mute: #3e3e6e;
+
+  /* Rule (dividers) — dark blue-tinted */
+  --color-rule: #2a2a50;
+  --color-rule-2: #1a1a38;
+  --color-rule-3: #121228;
+
+  /* Semantic — NEON */
+  --color-positive: #00ff88;
+  --color-positive-bg: #001a0e;
+  --color-negative: #ff3366;
+  --color-negative-bg: #1a0510;
+  --color-warning: #ffaa00;
+  --color-warning-bg: #1a1005;
+  --color-info: #b44aff;
+  --color-info-bg: #10051a;
+
+  /* Score levels — neon spectrum */
+  --color-score-excellent: #00ff88;
+  --color-score-good: #00cc6a;
+  --color-score-medium: #ffaa00;
+  --color-score-weak: #ff7744;
+  --color-score-bad: #ff3366;
+
+  /* Sector accent — distinctive neons */
+  --color-sector-robot: #00d4ff;
+  --color-sector-drug: #00ff88;
+  --color-sector-grid: #ffaa00;
+  --color-sector-ai: #b44aff;
+  --color-sector-optics: #a855f7;
+
+  /* Brand accent */
+  --color-accent: #00d4ff;
+
+  /* Spacing scale */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 24px;
+  --spacing-6: 32px;
+  --spacing-7: 48px;
+  --spacing-8: 64px;
+  --spacing-9: 96px;
+
+  /* Fonts — Space Grotesk for display, Inter for body */
+  --font-serif: var(--font-display-load), 'PingFang SC', -apple-system, sans-serif;
+  --font-sans: var(--font-sans-load), 'PingFang SC', -apple-system, sans-serif;
+  --font-mono: var(--font-mono-load), 'SF Mono', Menlo, monospace;
+
+  /* Motion */
+  --animate-duration-fast: 150ms;
+  --animate-duration-base: 240ms;
+  --animate-duration-slow: 400ms;
+}
+
+/* === Base reset === */
+
+html {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  background-image:
+    linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.font-mono,
+[class*="font-mono"] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* === Typography utilities === */
+
+.t-display {
+  font-family: var(--font-serif);
+  font-size: 48px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.t-h1 {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.t-h2 {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 600;
+}
+
+.t-h3 {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.t-h4 {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.t-body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.t-body-sm {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.t-meta {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-3);
+}
+
+.t-num-xl {
+  font-family: var(--font-mono);
+  font-size: 36px;
+  line-height: 1;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.t-num-lg {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.t-num {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.t-quote {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  line-height: 1.5;
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* === Button === */
+
+.btn {
+  font-weight: 500;
+  border: 1px solid var(--color-rule-2);
+  color: var(--color-text-2);
+  background: var(--color-surface-2);
+  cursor: pointer;
+  transition: border-color 150ms, color 150ms, background 150ms;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* === Common patterns === */
+
+.rule-strong {
+  border-top: 1.5px solid var(--color-rule);
+}
+
+.rule-default {
+  border-top: 1px solid var(--color-rule-2);
+}
+
+.rule-soft {
+  border-top: 1px solid var(--color-rule-3);
+}
+
+/* === Neon effects === */
+
+.neon-glow {
+  text-shadow: 0 0 7px var(--color-accent), 0 0 20px rgba(0, 212, 255, 0.4);
+}
+
+.neon-glow-green {
+  text-shadow: 0 0 7px var(--color-positive), 0 0 20px rgba(0, 255, 136, 0.4);
+}
+
+.neon-glow-red {
+  text-shadow: 0 0 7px var(--color-negative), 0 0 20px rgba(255, 51, 102, 0.4);
+}
+
+.card-neon {
+  background: var(--color-surface);
+  border: 1px solid var(--color-rule-2);
+  transition: border-color 240ms, box-shadow 240ms;
+}
+
+.card-neon:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.1), 0 0 40px rgba(0, 212, 255, 0.05);
+}
+
+.gradient-rule {
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-info), transparent);
+}
+
+@keyframes pulse-neon {
+  0%, 100% {
+    box-shadow: 0 0 4px var(--color-positive), 0 0 8px rgba(0, 255, 136, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 8px var(--color-positive), 0 0 16px rgba(0, 255, 136, 0.6);
+  }
+}
+
+.pulse-neon {
+  animation: pulse-neon 2s ease-in-out infinite;
+}
+
+/* Module container */
+.module {
+  background: var(--color-surface);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  padding: 24px 32px;
+}
+
+/* Focus ring */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* === Analysis Report Typography === */
+
+.analysis-report {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--color-text);
+}
+
+.analysis-report h1 {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  margin: 0 0 8px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--color-accent);
+}
+
+.analysis-report h2 {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin: 32px 0 12px 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-rule-2);
+}
+
+.analysis-report h3 {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 24px 0 8px 0;
+}
+
+.analysis-report h4 {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-2);
+  margin: 16px 0 6px 0;
+}
+
+.analysis-report p {
+  margin: 8px 0;
+  color: var(--color-text);
+}
+
+.analysis-report strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.analysis-report em {
+  color: var(--color-text-2);
+  font-style: italic;
+}
+
+.analysis-report hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-info), transparent);
+  margin: 28px 0;
+}
+
+/* Lists */
+.analysis-report ul {
+  margin: 8px 0;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.analysis-report ul li {
+  position: relative;
+  padding-left: 12px;
+  margin: 4px 0;
+  color: var(--color-text);
+}
+
+.analysis-report ul li::before {
+  content: "▸";
+  position: absolute;
+  left: -8px;
+  color: var(--color-accent);
+  font-size: 12px;
+}
+
+.analysis-report ol {
+  margin: 8px 0;
+  padding-left: 24px;
+  list-style: none;
+  counter-reset: report-ol;
+}
+
+.analysis-report ol li {
+  counter-increment: report-ol;
+  position: relative;
+  padding-left: 8px;
+  margin: 4px 0;
+  color: var(--color-text);
+}
+
+.analysis-report ol li::before {
+  content: counter(report-ol) ".";
+  position: absolute;
+  left: -20px;
+  color: var(--color-accent);
+  font-weight: 600;
+  font-size: 12px;
+  font-family: var(--font-mono);
+}
+
+/* Tables */
+.analysis-report table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+.analysis-report thead th {
+  background: var(--color-surface-2);
+  color: var(--color-text-2);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1.5px solid var(--color-accent);
+  white-space: nowrap;
+}
+
+.analysis-report tbody td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--color-rule-3);
+  color: var(--color-text);
+  vertical-align: top;
+}
+
+.analysis-report tbody tr:hover {
+  background: var(--color-surface-2);
+}
+
+.analysis-report tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Blockquotes */
+.analysis-report blockquote {
+  margin: 16px 0;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.06), rgba(180, 74, 255, 0.04));
+  border-left: 3px solid var(--color-accent);
+  color: var(--color-text);
+}
+
+.analysis-report blockquote p {
+  margin: 4px 0;
+}
+
+.analysis-report blockquote strong {
+  color: var(--color-accent);
+}
+
+/* Inline code */
+.analysis-report code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--color-surface-3);
+  color: var(--color-accent);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* Links */
+.analysis-report a {
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+  transition: border-color 150ms;
+}
+
+.analysis-report a:hover {
+  border-bottom-color: var(--color-accent);
+}
+
+/* PDF export — light theme for print */
+.analysis-report-pdf {
+  background: #ffffff !important;
+  color: #1a1a2e !important;
+  padding: 40px 48px;
+  font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.analysis-report-pdf h1 {
+  font-size: 24px;
+  color: #0a0a1a !important;
+  border-bottom: 2px solid #0066cc;
+  padding-bottom: 10px;
+  margin: 0 0 8px 0;
+}
+
+.analysis-report-pdf h2 {
+  font-size: 17px;
+  color: #0055aa !important;
+  border-bottom: 1px solid #dde;
+  padding-bottom: 4px;
+  margin: 24px 0 10px 0;
+}
+
+.analysis-report-pdf h3 {
+  font-size: 14px;
+  color: #222 !important;
+  margin: 18px 0 6px 0;
+}
+
+.analysis-report-pdf p,
+.analysis-report-pdf li,
+.analysis-report-pdf td {
+  color: #333 !important;
+}
+
+.analysis-report-pdf strong {
+  color: #111 !important;
+}
+
+.analysis-report-pdf hr {
+  border: none;
+  height: 1px;
+  background: #ccd;
+  margin: 20px 0;
+}
+
+.analysis-report-pdf table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 12px;
+}
+
+.analysis-report-pdf thead th {
+  background: #f0f0f8;
+  color: #333;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 2px solid #0066cc;
+}
+
+.analysis-report-pdf tbody td {
+  padding: 7px 12px;
+  border-bottom: 1px solid #e0e0ea;
+}
+
+.analysis-report-pdf blockquote {
+  margin: 12px 0;
+  padding: 12px 16px;
+  background: #f4f6fc;
+  border-left: 3px solid #0066cc;
+  color: #333;
+}
+
+.analysis-report-pdf ul li::before {
+  color: #0066cc;
+}
+
+.analysis-report-pdf ol li::before {
+  color: #0066cc;
+}
+
+.analysis-report-pdf code {
+  background: #f0f0f8;
+  color: #0055aa;
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 11px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

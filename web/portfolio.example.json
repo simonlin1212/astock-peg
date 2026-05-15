@@ -1,0 +1,11 @@
+{
+  "stocks": {
+    "688017": {
+      "ticker": "688017",
+      "name": "绝味食品(示例)",
+      "sectorKey": "consumer",
+      "consensusEps26": 1.5,
+      "cagr": 0.2
+    }
+  }
+}

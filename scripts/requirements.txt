@@ -1,0 +1,2 @@
+akshare>=1.12.0
+mootdx>=0.7.0
