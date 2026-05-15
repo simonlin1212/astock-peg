@@ -76,13 +76,12 @@ export function WatchlistTable({ stocks, onAdd, onDelete, onAnalyze }: Watchlist
             value={ticker}
             onChange={(e) => setTicker(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-            placeholder="输入6位股票代码"
-            maxLength={6}
-            className="px-3 py-1.5 text-sm font-mono bg-[var(--color-surface-2)] border border-[var(--color-rule-2)] text-[var(--color-text)] placeholder:text-[var(--color-text-3)] focus:border-[var(--color-accent)] focus:outline-none w-40"
+            placeholder="代码或名称，如 600519 / 贵州茅台"
+            className="px-3 py-1.5 text-sm bg-[var(--color-surface-2)] border border-[var(--color-rule-2)] text-[var(--color-text)] placeholder:text-[var(--color-text-3)] focus:border-[var(--color-accent)] focus:outline-none w-56"
           />
           <button
             onClick={handleAdd}
-            disabled={adding || ticker.length !== 6}
+            disabled={adding || ticker.trim().length === 0}
             className="btn text-xs px-3 py-1.5"
           >
             {adding ? "添加中..." : "添加"}
@@ -175,7 +174,7 @@ export function WatchlistTable({ stocks, onAdd, onDelete, onAnalyze }: Watchlist
             {stocks.length === 0 && (
               <tr>
                 <td colSpan={7} className="py-8 text-center t-meta text-[var(--color-text-3)]">
-                  暂无自选股票 — 输入6位代码添加，监控行情
+                  暂无自选股票 — 输入代码或股票名称添加
                 </td>
               </tr>
             )}

@@ -10,8 +10,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/simonlin1212/astock-peg/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/simonlin1212/astock-peg?style=social"/></a>
-  <a href="https://github.com/simonlin1212/astock-peg/network/members"><img alt="Forks" src="https://img.shields.io/github/forks/simonlin1212/astock-peg?style=social"/></a>
   <a href="./LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache_2.0-blue"/></a>
 </p>
 

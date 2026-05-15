@@ -1,27 +1,59 @@
 import { NextResponse } from "next/server";
+import { execFile } from "child_process";
+import path from "path";
 import {
   readPortfolio,
   writePortfolio,
   fetchStockInfo,
 } from "@/lib/portfolio";
 
+const SCRIPTS_DIR = path.join(process.cwd(), "..", "scripts");
+
+function resolveTicker(query: string): Promise<{ code: string; name: string }> {
+  return new Promise((resolve, reject) => {
+    const script = path.join(SCRIPTS_DIR, "resolve_ticker.py");
+    execFile("python3", [script, query], { timeout: 15000 }, (err, stdout, stderr) => {
+      if (err) return reject(new Error(stderr || err.message));
+      try {
+        const result = JSON.parse(stdout);
+        if (result.error) return reject(new Error(result.error));
+        resolve(result);
+      } catch {
+        reject(new Error("解析返回格式异常"));
+      }
+    });
+  });
+}
+
+const IS_PURE_DIGIT = /^\d{6}$/;
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const ticker = body?.ticker as string | undefined;
+    let ticker = (body?.ticker as string | undefined)?.trim();
 
-    if (!ticker || !/^\d{6}$/.test(ticker)) {
+    if (!ticker) {
       return NextResponse.json(
-        { error: "Invalid ticker. Must be a 6-digit code." },
+        { error: "请输入股票代码或名称" },
         { status: 400 },
       );
+    }
+
+    if (!IS_PURE_DIGIT.test(ticker)) {
+      try {
+        const resolved = await resolveTicker(ticker);
+        ticker = resolved.code;
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : "股票名称解析失败";
+        return NextResponse.json({ error: msg }, { status: 400 });
+      }
     }
 
     const portfolio = readPortfolio();
 
     if (portfolio.stocks[ticker]) {
       return NextResponse.json(
-        { error: `Ticker ${ticker} already exists.` },
+        { error: `${ticker} 已在自选股中` },
         { status: 409 },
       );
     }
