@@ -49,7 +49,7 @@ export function collectData(ticker: string): Promise<string> {
 }
 
 export function buildPegAnalysisPrompt(ticker: string, name: string): string {
-  return `你是一个专业的 A 股 PEG 估值分析助手。请基于以下数据，为 ${name}(${ticker}) 生成一份以 PEG 为核心的投资分析报告。
+  return `你是一个专业的 A 股 PEG 估值分析助手。请基于以下数据，为 ${name}(${ticker}) 生成一份以 PEG 为核心的估值参考报告（仅供学习研究，不构成投资建议）。
 
 ## 分析框架（严格按此结构输出 Markdown）
 
@@ -63,11 +63,11 @@ export function buildPegAnalysisPrompt(ticker: string, name: string): string {
 - **盈利增速 CAGR**（近3年净利润复合增速，或一致预期增速）
 - **PEG = 前瞻PE / (CAGR×100)**
 - **PEG 评级**：
-  - PEG < 0.5 → 极度低估（绿色信号）
-  - 0.5 ≤ PEG < 1.0 → 低估（偏多）
+  - PEG < 0.5 → 极度低估（估值显著低于增速）
+  - 0.5 ≤ PEG < 1.0 → 低估（估值低于增速）
   - 1.0 ≤ PEG < 1.5 → 合理区间
   - 1.5 ≤ PEG < 2.0 → 偏贵（谨慎）
-  - PEG ≥ 2.0 → 高估（回避）
+  - PEG ≥ 2.0 → 高估（估值显著高于增速）
 
 ### 3. PE 消化时间
 - 当前前瞻 PE 消化到 30x 合理估值需要几年
@@ -98,7 +98,8 @@ export function buildPegAnalysisPrompt(ticker: string, name: string): string {
 3. 数据要用表格呈现，直观清晰
 4. 结论部分要明确给出 PEG 数值和评级
 5. **严禁估算或编造数据**：所有数值必须直接引用下方原始数据中的真实字段，不得使用"≈"或"估算"。growth_history 包含各报告期的真实财报数据（净利润、营收、EPS、ROE等），consensus_eps 包含机构一致预期，financial 包含基础财务指标——请直接引用这些字段的值
-6. 当前日期是 ${new Date().toISOString().slice(0, 10)}，已披露的财报数据（如2024年报、2025年报）是真实数据，不是预测`;
+6. 当前日期是 ${new Date().toISOString().slice(0, 10)}，已披露的财报数据（如2024年报、2025年报）是真实数据，不是预测
+7. 最后必须附上免责声明："本报告由 AI 自动生成，仅供学习研究与技术演示，不构成任何投资建议。投资者应独立判断并咨询持牌专业机构。"`;
 }
 
 export async function runApiAnalysis(
@@ -194,7 +195,7 @@ async function callOpenAiApi(userMessage: string): Promise<string> {
       model: "gpt-4o",
       max_tokens: 4096,
       messages: [
-        { role: "system", content: "你是一个专业的 A 股 PEG 估值分析助手。" },
+        { role: "system", content: "你是一个 A 股 PEG 估值计算工具。你的输出仅供学习研究参考，不构成投资建议。" },
         { role: "user", content: userMessage },
       ],
     }),

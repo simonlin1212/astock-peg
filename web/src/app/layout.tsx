@@ -42,6 +42,9 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col">
         <TopNav />
         <main className="flex-1">{children}</main>
+        <footer className="border-t border-[var(--color-rule-3)] py-4 px-6 text-center text-xs text-[var(--color-text-3)]">
+          ⚠️ 免责声明：本工具仅供学习研究与技术演示，不构成任何投资建议，亦不提供证券投资顾问服务。投资有风险，决策请咨询持牌专业机构。
+        </footer>
       </body>
     </html>
   );

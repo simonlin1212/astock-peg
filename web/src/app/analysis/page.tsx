@@ -136,6 +136,10 @@ function AnalysisContent() {
       const clone = reportRef.current.cloneNode(true) as HTMLElement;
       clone.classList.remove("analysis-report");
       clone.classList.add("analysis-report", "analysis-report-pdf");
+      const disclaimerDiv = document.createElement('div');
+      disclaimerDiv.style.cssText = 'padding: 8px 12px; margin-bottom: 16px; background: #fffbeb; border: 1px solid #fbbf24; border-radius: 8px; font-size: 12px; color: #92400e;';
+      disclaimerDiv.textContent = '⚠️ 免责声明：本报告由 AI 自动生成，仅供学习研究与技术演示，不构成任何投资建议。投资有风险，决策请咨询持牌专业机构。';
+      clone.insertBefore(disclaimerDiv, clone.firstChild);
       const filename = `PEG_${currentReport.name || currentReport.ticker}_${currentReport.date}.pdf`;
       await html2pdf()
         .set({
@@ -261,6 +265,9 @@ function AnalysisContent() {
                 >
                   {exporting ? "导出中..." : "导出 PDF"}
                 </button>
+              </div>
+              <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3 mb-4 text-sm text-amber-800 dark:text-amber-200">
+                ⚠️ 以下内容由 AI 自动生成，仅供学习研究与技术演示，不构成任何投资建议。投资有风险，决策请咨询持牌专业机构。
               </div>
               <article ref={reportRef} className="max-w-none analysis-report">
                 <Markdown remarkPlugins={[remarkGfm]}>
