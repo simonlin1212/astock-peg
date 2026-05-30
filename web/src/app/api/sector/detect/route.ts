@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { execFile } from "child_process";
 import path from "path";
+import { getPythonBin } from "@/lib/python";
 
 interface DetectResult {
   industry: string;
@@ -24,7 +25,7 @@ export async function GET(request: Request) {
   try {
     const result = await new Promise<DetectResult>((resolve, reject) => {
       execFile(
-        "python3",
+        getPythonBin(),
         [script, ticker],
         { timeout: 20000, env: { ...process.env, NO_PROXY: "*" } },
         (err, stdout, stderr) => {

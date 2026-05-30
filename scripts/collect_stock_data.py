@@ -5,6 +5,7 @@ collect_stock_data.py — 一键采集单只股票的全量分析数据
 输出: JSON 到 stdout
 """
 
+import os
 import sys
 import json
 import math
@@ -14,6 +15,9 @@ import warnings
 from datetime import datetime
 
 warnings.filterwarnings("ignore")
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import datafeeds as feeds  # noqa: E402
 
 
 def detect_market(ticker: str) -> str:
@@ -74,38 +78,23 @@ def fetch_tencent_quote(ticker: str) -> dict:
 
 def fetch_consensus_eps(ticker: str) -> list:
     try:
-        import akshare as ak
-        df = ak.stock_profit_forecast_ths(
-            symbol=ticker,
-            indicator="预测年报每股收益"
-        )
-        if df is not None and not df.empty:
-            return df.head(20).to_dict(orient="records")
+        return feeds.ths_eps_forecast(ticker, limit=20)
     except Exception as e:
         return [{"error": str(e)}]
-    return []
 
 
 def fetch_research_reports(ticker: str) -> list:
     try:
-        import akshare as ak
-        df = ak.stock_research_report_em(symbol=ticker)
-        if df is not None and not df.empty:
-            return df.head(15).to_dict(orient="records")
+        return feeds.eastmoney_reports(ticker, limit=15)
     except Exception as e:
         return [{"error": str(e)}]
-    return []
 
 
 def fetch_news(ticker: str) -> list:
     try:
-        import akshare as ak
-        df = ak.stock_news_em(symbol=ticker)
-        if df is not None and not df.empty:
-            return df.head(10).to_dict(orient="records")
+        return feeds.eastmoney_stock_news(ticker, page_size=10)
     except Exception as e:
         return [{"error": str(e)}]
-    return []
 
 
 def fetch_financial_snapshot(ticker: str) -> dict:
@@ -136,13 +125,9 @@ def fetch_f10_overview(ticker: str) -> dict:
 
 def fetch_growth_history(ticker: str) -> list:
     try:
-        import akshare as ak
-        df = ak.stock_financial_abstract_ths(symbol=ticker, indicator="按报告期")
-        if df is not None and not df.empty:
-            return df.tail(8).iloc[::-1].to_dict(orient="records")
+        return feeds.sina_income_statement(ticker, limit=8)
     except Exception:
-        pass
-    return []
+        return []
 
 
 def main():

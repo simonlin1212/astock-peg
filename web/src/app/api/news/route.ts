@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { execFile } from "child_process";
 import path from "path";
 import { readPortfolio } from "@/lib/portfolio";
+import { getPythonBin } from "@/lib/python";
 
 export const maxDuration = 60;
 
@@ -11,7 +12,7 @@ function collectNews(tickers: string[]): Promise<string> {
   return new Promise((resolve, reject) => {
     const script = path.join(SCRIPTS_DIR, "collect_news.py");
     const args = tickers.length > 0 ? [script, tickers.join(",")] : [script];
-    execFile("python3", args, { timeout: 60000 }, (err, stdout, stderr) => {
+    execFile(getPythonBin(), args, { timeout: 60000 }, (err, stdout, stderr) => {
       if (err) return reject(new Error(stderr || err.message));
       resolve(stdout);
     });

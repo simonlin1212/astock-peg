@@ -6,13 +6,14 @@ import {
   writePortfolio,
   fetchStockInfo,
 } from "@/lib/portfolio";
+import { getPythonBin } from "@/lib/python";
 
 const SCRIPTS_DIR = path.join(process.cwd(), "..", "scripts");
 
 function resolveTicker(query: string): Promise<{ code: string; name: string }> {
   return new Promise((resolve, reject) => {
     const script = path.join(SCRIPTS_DIR, "resolve_ticker.py");
-    execFile("python3", [script, query], { timeout: 15000 }, (err, stdout, stderr) => {
+    execFile(getPythonBin(), [script, query], { timeout: 15000 }, (err, stdout, stderr) => {
       if (err) return reject(new Error(stderr || err.message));
       try {
         const result = JSON.parse(stdout);

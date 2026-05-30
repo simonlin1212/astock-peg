@@ -82,8 +82,9 @@ PEG = PE / 盈利增速(%)
 ├───────────────────────────────────────────────────┤
 │           Data Layer (Multi-Source)                │
 │  腾讯财经 API ──── 实时行情（PE/PB/价格/市值）     │
-│  mootdx ────────── 行业检测（F10 同行业个股）      │
-│  akshare ───────── 财务数据 + 新闻 + 公告          │
+│  mootdx ────────── 行业检测（F10）+ 财务快照        │
+│  直连 HTTP ─────── 研报/新闻/公告/一致预期/财报     │
+│   （东财·同花顺·新浪·巨潮，零 akshare，东财已限流） │
 ├───────────────────────────────────────────────────┤
 │              AI Engine (Pluggable)                 │
 │  Anthropic Claude / OpenAI GPT / 兼容接口          │
@@ -98,7 +99,7 @@ PEG = PE / 盈利增速(%)
 |---|---|---|
 | 前端 | Next.js 16 + React 19 + Tailwind CSS | Turbopack 热更新 |
 | 行情数据 | 腾讯财经 HTTP API | 免费、不限频、无需 token |
-| 财务数据 | akshare + mootdx | Python 脚本采集 |
+| 财务/研报/新闻 | 直连 HTTP（东财·同花顺·新浪·巨潮）+ mootdx | Python 脚本采集，零 akshare 依赖 |
 | AI 引擎 | Anthropic / OpenAI（用户自备 key） | 可接任何兼容接口 |
 | 存储 | JSON 文件 | 无数据库依赖 |
 
@@ -109,10 +110,13 @@ PEG = PE / 盈利增速(%)
 | 数据源 | 协议 | 提供数据 | 限制 |
 |--------|------|----------|------|
 | 腾讯财经 | HTTP (qt.gtimg.cn) | 实时行情、PE、PB、市值、涨跌幅 | 免费，无需认证 |
-| mootdx | TCP (7709) | F10 行业归属、同行业个股列表 | 免费，需 `pip install mootdx` |
-| akshare | Python 库 | 财务三表、一致预期 EPS、个股新闻、公告 | 免费，需 `pip install akshare` |
+| mootdx | TCP (7709) | F10 行业归属、同行业个股、财务快照 | 免费，需国内 IP |
+| 东财 eastmoney | HTTP | 研报、个股新闻、全球资讯（替代财联社） | 免费，已内置 `em_get` 限流防封 |
+| 同花顺 10jqka | HTTP | 机构一致预期 EPS | 免费 |
+| 新浪财经 | HTTP | 多期利润表（成长历史） | 免费 |
+| 巨潮 cninfo | HTTP | 公司公告全文 | 免费 |
 
-全部数据源**免费 + 无需申请 API Key**（AI 分析除外）。
+全部数据源**免费 + 无需申请 API Key**（AI 分析除外），且**零 akshare 依赖**（v1.1.0 全量替换为直连 HTTP）。东财系接口有访问频率风控，已统一经 `em_get()` 串行限流防封。
 
 ---
 
@@ -121,8 +125,8 @@ PEG = PE / 盈利增速(%)
 ### 环境要求
 
 - Node.js 18+
-- Python 3.8+
-- `pip install akshare mootdx`
+- Python 3.10+（Windows 用户：仓库已自动适配 `python`，无需 `python3`）
+- `pip install -r scripts/requirements.txt`（mootdx / requests / pandas / lxml，**已移除 akshare**）
 
 ### 安装 & 运行
 
@@ -238,7 +242,7 @@ A PEG (Price/Earnings-to-Growth) valuation analysis tool for China A-shares, ins
 ## Tech Stack
 
 - **Frontend**: Next.js 16 + React 19 + Tailwind CSS
-- **Data**: Tencent Finance API (real-time quotes) + mootdx (sector detection) + akshare (financials)
+- **Data**: Tencent Finance API (real-time quotes) + mootdx (sector detection + financial snapshot) + direct HTTP (Eastmoney / THS / Sina / cninfo for reports, news, announcements, consensus EPS, statements — zero akshare)
 - **AI**: Anthropic Claude / OpenAI GPT (bring your own key)
 - **Storage**: JSON files (zero database dependency)
 
@@ -251,7 +255,7 @@ cp .env.example .env  # Fill in your AI API key
 npm install && npm run dev
 ```
 
-Prerequisites: Node.js 18+, Python 3.8+, `pip install akshare mootdx`
+Prerequisites: Node.js 18+, Python 3.10+ (Windows auto-detected, no `python3` needed), `pip install -r scripts/requirements.txt` (akshare removed in v1.1.0)
 
 ## PEG Calculation
 

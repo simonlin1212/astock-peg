@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 """
-collect_news.py — 采集新闻公告数据
-用法: python3 collect_news.py [ticker1,ticker2,...]
+collect_news.py — 采集新闻公告数据（直连 HTTP，零 akshare 依赖）
+用法: python collect_news.py [ticker1,ticker2,...]
 输出: JSON 到 stdout
+
+数据源（见 datafeeds.py）：
+  个股新闻 → 东财 search-api-web
+  市场快讯 → 东财全球资讯 np-weblist（替代已下线的财联社）
+  公告     → 巨潮 cninfo
 """
 
+import os
 import sys
 import json
 import math
@@ -12,6 +18,9 @@ import warnings
 from datetime import datetime
 
 warnings.filterwarnings("ignore")
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import datafeeds as feeds  # noqa: E402
 
 
 def sanitize(obj):
@@ -26,50 +35,34 @@ def sanitize(obj):
 
 def fetch_stock_news(ticker: str) -> list:
     try:
-        import akshare as ak
-        df = ak.stock_news_em(symbol=ticker)
-        if df is not None and not df.empty:
-            rows = df.head(15).to_dict(orient="records")
-            for r in rows:
-                r["category"] = "stock"
-                r["ticker"] = ticker
-            return rows
+        rows = feeds.eastmoney_stock_news(ticker, page_size=15)
+        for r in rows:
+            r["category"] = "stock"
+            r["ticker"] = ticker
+        return rows
     except Exception as e:
-        return [{"error": str(e), "ticker": ticker}]
-    return []
+        return [{"error": str(e), "ticker": ticker, "category": "stock"}]
 
 
 def fetch_market_news() -> list:
     try:
-        import akshare as ak
-        df = ak.stock_info_global_cls()
-        if df is not None and not df.empty:
-            rows = df.head(30).to_dict(orient="records")
-            for r in rows:
-                r["category"] = "market"
-            return rows
+        rows = feeds.eastmoney_global_news(page_size=30)
+        for r in rows:
+            r["category"] = "market"
+        return rows
     except Exception as e:
-        return [{"error": str(e)}]
-    return []
+        return [{"error": str(e), "category": "market"}]
 
 
 def fetch_announcements(ticker: str) -> list:
     try:
-        import akshare as ak
-        market = "深交所" if ticker.startswith("0") or ticker.startswith("3") else "上交所"
-        df = ak.stock_zh_a_disclosure_report_cninfo(
-            symbol=ticker,
-            market=market,
-        )
-        if df is not None and not df.empty:
-            rows = df.head(10).to_dict(orient="records")
-            for r in rows:
-                r["category"] = "announcement"
-                r["ticker"] = ticker
-            return rows
+        rows = feeds.cninfo_announcements(ticker, page_size=10)
+        for r in rows:
+            r["category"] = "announcement"
+            r["ticker"] = ticker
+        return rows
     except Exception:
-        pass
-    return []
+        return []
 
 
 def main():

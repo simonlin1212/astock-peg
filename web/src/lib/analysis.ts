@@ -3,6 +3,7 @@ import { execFile } from "child_process";
 import path from "path";
 
 import type { AnalysisRecord } from "./types";
+import { getPythonBin } from "./python";
 
 export type { AnalysisRecord };
 
@@ -41,7 +42,7 @@ export function getRawDataPath(id: string): string {
 export function collectData(ticker: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const script = path.join(SCRIPTS_DIR, "collect_stock_data.py");
-    execFile("python3", [script, ticker], { timeout: 30000 }, (err, stdout, stderr) => {
+    execFile(getPythonBin(), [script, ticker], { timeout: 30000 }, (err, stdout, stderr) => {
       if (err) return reject(new Error(stderr || err.message));
       resolve(stdout);
     });
