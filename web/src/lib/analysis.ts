@@ -186,14 +186,20 @@ async function callAnthropicApi(userMessage: string): Promise<string> {
 }
 
 async function callOpenAiApi(userMessage: string): Promise<string> {
-  const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+  // Base URL + model are overridable so any OpenAI-compatible provider works
+  // (DeepSeek, Qwen, GLM, Kimi, OpenRouter, local Ollama, etc.), mirroring the
+  // Anthropic path's ANTHROPIC_BASE_URL/ANTHROPIC_MODEL overrides (#5).
+  // e.g. DeepSeek: OPENAI_BASE_URL=https://api.deepseek.com  OPENAI_MODEL=deepseek-chat
+  const baseUrl = (process.env.OPENAI_BASE_URL || "https://api.openai.com").replace(/\/+$/, "");
+  const model = process.env.OPENAI_MODEL || "gpt-4o";
+  const resp = await fetch(`${baseUrl}/v1/chat/completions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "gpt-4o",
+      model,
       max_tokens: 4096,
       messages: [
         { role: "system", content: "你是一个 A 股 PEG 估值计算工具。你的输出仅供学习研究参考，不构成投资建议。" },
@@ -204,7 +210,7 @@ async function callOpenAiApi(userMessage: string): Promise<string> {
 
   if (!resp.ok) {
     const err = await resp.text();
-    throw new Error(`OpenAI API error: ${resp.status} ${err}`);
+    throw new Error(`OpenAI-compatible API error: ${resp.status} ${err}`);
   }
 
   const data = await resp.json();

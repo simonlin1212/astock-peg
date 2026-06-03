@@ -150,11 +150,18 @@ npm run dev
 
 ### 兼容的 AI 提供商
 
-任何兼容 Anthropic Messages API 格式的提供商都能用（通过 `ANTHROPIC_BASE_URL` 配置）：
+两条接入路径，任选其一：
 
-- Anthropic Claude（官方）
-- OpenAI（通过 `OPENAI_API_KEY` 配置）
-- 自部署/第三方中转（配 BASE_URL 即可）
+- **Anthropic 格式**：Claude 官方，或任何兼容 Anthropic Messages API 的中转（配 `ANTHROPIC_BASE_URL` / `ANTHROPIC_MODEL`）。
+- **OpenAI 兼容格式**：未设 `ANTHROPIC_API_KEY` 时自动启用。除 OpenAI 官方外，可通过 `OPENAI_BASE_URL` + `OPENAI_MODEL` 接入任意 OpenAI 兼容供应商——**DeepSeek / 通义 / 智谱 / Kimi / OpenRouter / 本地 Ollama** 等。
+
+DeepSeek 示例（`web/.env`）：
+
+```
+OPENAI_API_KEY=sk-你的deepseek-key
+OPENAI_BASE_URL=https://api.deepseek.com
+OPENAI_MODEL=deepseek-chat
+```
 
 ---
 
