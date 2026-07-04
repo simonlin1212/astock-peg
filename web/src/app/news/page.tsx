@@ -59,7 +59,8 @@ function getSource(item: NewsItem): string {
 function getUrl(item: NewsItem): string | null {
   const candidates = ["新闻链接", "url", "link", "公告链接"];
   for (const k of candidates) {
-    if (typeof item[k] === "string" && (item[k] as string).startsWith("http")) {
+    // 只放行 http(s):挡 javascript:/data: 等伪协议进 href 触发 XSS;大小写不敏感
+    if (typeof item[k] === "string" && /^https?:\/\//i.test(item[k] as string)) {
       return item[k] as string;
     }
   }
