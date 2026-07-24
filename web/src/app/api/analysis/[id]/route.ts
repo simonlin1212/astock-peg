@@ -61,7 +61,8 @@ function extractConclusion(report: string): string {
   return "分析已完成";
 }
 
+// 只回填 PEG 数值，不抽取「低估 / 高估」这类估值定性标签。
 function extractPegRating(report: string): string {
-  const match = report.match(/(极度低估|低估|合理|偏贵|高估)/);
-  return match ? match[1] : "";
+  const match = report.match(/PEG\s*[=：:]\s*([\d.]+)/);
+  return match ? `PEG ${match[1]}` : "";
 }

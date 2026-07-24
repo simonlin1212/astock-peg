@@ -20,13 +20,9 @@ function statusLabel(s: AnalysisRecord["status"]): { text: string; color: string
   }
 }
 
+// 徽标只显示计算出的 PEG 数值，不显示「低估 / 高估」这类估值定性判断。
 function pegRatingBadge(rating?: string): { text: string; color: string } | null {
   if (!rating) return null;
-  if (rating.includes("极度低估")) return { text: "极度低估", color: "var(--color-score-excellent)" };
-  if (rating.includes("低估")) return { text: "低估", color: "var(--color-positive)" };
-  if (rating.includes("合理")) return { text: "合理", color: "var(--color-warning)" };
-  if (rating.includes("偏贵")) return { text: "偏贵", color: "var(--color-score-weak)" };
-  if (rating.includes("高估")) return { text: "高估", color: "var(--color-negative)" };
   return { text: rating, color: "var(--color-text-2)" };
 }
 

@@ -63,12 +63,10 @@ export function buildPegAnalysisPrompt(ticker: string, name: string): string {
 - **一致预期 EPS**（如有数据）→ 计算前瞻 PE
 - **盈利增速 CAGR**（近3年净利润复合增速，或一致预期增速）
 - **PEG = 前瞻PE / (CAGR×100)**
-- **PEG 评级**：
-  - PEG < 0.5 → 极度低估（估值显著低于增速）
-  - 0.5 ≤ PEG < 1.0 → 低估（估值低于增速）
-  - 1.0 ≤ PEG < 1.5 → 合理区间
-  - 1.5 ≤ PEG < 2.0 → 偏贵（谨慎）
-  - PEG ≥ 2.0 → 高估（估值显著高于增速）
+- **PEG 所处区间**（只陈述数值关系，不做估值定性）：
+  - PEG < 1.0 → 前瞻 PE 低于盈利增速
+  - 1.0 ≤ PEG < 1.5 → 前瞻 PE 与盈利增速接近
+  - PEG ≥ 1.5 → 前瞻 PE 高于盈利增速
 
 ### 3. PE 消化时间
 - 当前前瞻 PE 消化到 30x 合理估值需要几年
@@ -88,16 +86,19 @@ export function buildPegAnalysisPrompt(ticker: string, name: string): string {
 - PEG 分析的局限性（周期股不适用、亏损股不适用等）
 - 该股的主要风险因素
 
-### 7. 综合结论
-- PEG 评级（一个词）
-- 估值判断（低估/合理/高估）
-- 一句话核心观点
+### 7. 计算结果汇总
+只汇总本报告算出的数字，不做估值定性、不给操作倾向：
+- PEG 数值
+- 前瞻 PE、盈利增速 CAGR
+- PE 消化到 30x 所需年数
+- 同行 PEG 数值区间与本股所处位置
 
 ## 输出要求
 1. 报告格式为 Markdown
 2. 开头第一行: # ${name}(${ticker}) PEG 估值分析
 3. 数据要用表格呈现，直观清晰
-4. 结论部分要明确给出 PEG 数值和评级
+4. 汇总部分要明确给出 PEG 数值
+4.1 **只做计算与数据陈述**：不使用「低估 / 高估 / 偏贵 / 值得关注 / 建议买入卖出」等定性或倾向性表述，不预测股价走势，不给买卖时机或目标价。估值是否合适由读者自行判断
 5. **严禁估算或编造数据**：所有数值必须直接引用下方原始数据中的真实字段，不得使用"≈"或"估算"。growth_history 包含各报告期的真实财报数据（净利润、营收、EPS、ROE等），consensus_eps 包含机构一致预期，financial 包含基础财务指标——请直接引用这些字段的值
 6. 当前日期是 ${new Date().toISOString().slice(0, 10)}，已披露的财报数据（如2024年报、2025年报）是真实数据，不是预测
 7. 最后必须附上免责声明："本报告由 AI 自动生成，仅供学习研究与技术演示，不构成任何投资建议。投资者应独立判断并咨询持牌专业机构。"`;
@@ -132,12 +133,10 @@ export async function runApiAnalysis(
   const reportPath = getReportPath(id);
   writeFileSync(reportPath, report, "utf-8");
 
+  // 只回填 PEG 数值，不再抽取「低估 / 高估」这类估值定性标签。
   const pegMatch = report.match(/PEG\s*[=：:]\s*([\d.]+)/);
-  const conclusionSection = report.match(/综合结论[\s\S]*$/)?.[0] ?? "";
-  const ratingMatch =
-    conclusionSection.match(/PEG\s*评级[：:]\s*\**\s*(极度低估|低估|合理|偏贵|高估)/) ??
-    conclusionSection.match(/(极度低估|低估|合理|偏贵|高估)/);
-  const conclusionMatch = report.match(/一句话核心观点[：:]\s*(.+)/);
+  const pegValue = pegMatch ? `PEG ${pegMatch[1]}` : undefined;
+  const conclusionMatch = report.match(/PEG 数值[：:]\s*(.+)/);
 
   const records = readIndex();
   writeIndex(
@@ -146,8 +145,8 @@ export async function runApiAnalysis(
         ? {
             ...r,
             status: "completed" as const,
-            pegRating: ratingMatch?.[1] || (pegMatch ? `PEG ${pegMatch[1]}` : undefined),
-            conclusion: conclusionMatch?.[1]?.slice(0, 60) || ratingMatch?.[1] || "分析完成",
+            pegRating: pegValue,
+            conclusion: conclusionMatch?.[1]?.slice(0, 60) || pegValue || "分析完成",
           }
         : r,
     ),

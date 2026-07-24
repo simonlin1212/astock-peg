@@ -1,6 +1,6 @@
 {
   "name": "ep-peg",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "PEG-based A-Share stock analysis tool with AI-powered reports",
   "license": "MIT",
   "scripts": {

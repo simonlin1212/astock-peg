@@ -18,12 +18,11 @@ function pegColor(peg: number): string {
   return "var(--color-negative)";
 }
 
+// 只描述 PEG 与 1 的数值关系，不做「低估 / 高估」这类估值定性判断。
 function pegLabel(peg: number): string {
-  if (peg < 0.5) return "极度低估";
-  if (peg < 1) return "低估";
-  if (peg < 1.5) return "合理";
-  if (peg < 2) return "偏贵";
-  return "高估";
+  if (peg < 1) return "PE < 增速";
+  if (peg < 1.5) return "PE ≈ 增速";
+  return "PE > 增速";
 }
 
 function changePctColor(v: number): string {
