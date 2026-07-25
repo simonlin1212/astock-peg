@@ -213,7 +213,7 @@ astock-peg/
 如果这个工具帮到了你的投研工作流，欢迎请作者喝杯咖啡 ☕
 
 <p align="center">
-  <a href="https://buymeacoffee.com/simonlin1212">☕ Buy Me a Coffee</a>
+  <a href="https://buymeacoffee.com/simonlin1212"><img src="./assets/bmc-qr.png" width="180" alt="Buy Me a Coffee"></a>
 </p>
 
 > 想要什么功能？欢迎开 [Issue](https://github.com/simonlin1212/astock-peg/issues) 提需求，赞助者的 Issue 优先处理。
