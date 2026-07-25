@@ -1,34 +1,27 @@
+<p align="center"><b>简体中文</b> | <a href="README_en.md">English</a></p>
+
 <h1 align="center">astock-peg</h1>
 
 <p align="center">
-  A 股 PEG 估值分析工具 — 彼得·林奇 PEG 投资法的本地化实践<br>
-  Next.js 全栈应用 · AI 自动生成估值报告 · 行业板块 PE 对比 · 零数据库依赖
+  <b>A 股 PEG 估值分析工具 — Next.js 全栈 · AI 生成估值报告 · 行业板块 PE 对比 · 零数据库依赖</b>
 </p>
 
 <p align="center">
-  <b>⚠️ 本工具只做 PEG 相关的计算与数据呈现，不做估值定性、不给买卖建议、不预测走势。<br>
-  不构成任何投资建议，投资决策请咨询持牌专业机构。</b>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License"></a>
+  <img src="https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white" alt="Next.js">
+  <a href="https://github.com/simonlin1212/astock-peg/stargazers"><img src="https://img.shields.io/github/stars/simonlin1212/astock-peg?style=social" alt="Stars"></a>
 </p>
 
 <p align="center">
-  <a href="./LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache_2.0-blue"/></a>
+  <a href="#为什么做这个工具">为什么做这个工具</a> ·
+  <a href="#功能演示">功能演示</a> ·
+  <a href="#技术架构">技术架构</a> ·
+  <a href="#数据源">数据源</a> ·
+  <a href="#快速开始">快速开始</a> ·
+  <a href="#peg-计算逻辑">PEG 计算逻辑</a>
 </p>
 
----
-
-## 目录
-
-- [为什么做这个工具](#为什么做这个工具)
-- [功能演示](#功能演示)
-- [技术架构](#技术架构)
-- [数据源](#数据源)
-- [快速开始](#快速开始)
-- [PEG 计算逻辑](#peg-计算逻辑)
-- [项目结构](#项目结构)
-- [Donate](#donate)
-- [许可证](#许可证)
-
----
+> **本工具只做 PEG 相关的计算与数据呈现**，不做估值定性、不给买卖建议、不预测涨跌，不构成任何投资建议，投资决策请咨询持牌专业机构。
 
 ## 为什么做这个工具
 
@@ -208,7 +201,19 @@ astock-peg/
 
 ---
 
-## Donate
+## 更新日志
+
+见 [CHANGELOG.md](./CHANGELOG.md)。
+
+---
+
+## 免责声明
+
+本工具只做 PEG 相关的计算与数据呈现，不做估值定性、不给买卖建议、不预测涨跌。不构成任何投资建议，投资决策请咨询持牌专业机构。
+
+---
+
+## 赞赏
 
 如果这个工具帮到了你的投研工作流，欢迎请作者喝杯咖啡 ☕
 
@@ -220,64 +225,10 @@ astock-peg/
 
 ---
 
-## 许可证
+## License
 
 [Apache License 2.0](./LICENSE)
 
 ---
 
 **作者：** Simon 林 · X [@linsizhen](https://x.com/linsizhen) · TikTok [@simonlin0423](https://www.tiktok.com/@simonlin0423) · 邮箱：[simonlin0423@gmail.com](mailto:simonlin0423@gmail.com)
-
----
-
-<details>
-<summary>🇬🇧 English</summary>
-
-# astock-peg
-
-A PEG (Price/Earnings-to-Growth) valuation analysis tool for China A-shares, inspired by Peter Lynch's investment methodology.
-
-## Features
-
-- **PEG Dashboard** — Real-time stock monitoring with PE, PB, market cap, and instant PEG calculation
-- **AI Analysis Reports** — Auto-collect financial data → AI generates structured 7-section PEG valuation report → Export as PDF
-- **Sector PE Comparison** — Input any ticker → Auto-detect industry → Show top-20 peers by market cap with PE distribution
-- **News Feed** — Stock-specific news + market headlines aggregation
-
-## Tech Stack
-
-- **Frontend**: Next.js 16 + React 19 + Tailwind CSS
-- **Data**: Tencent Finance API (real-time quotes) + mootdx (sector detection + financial snapshot) + direct HTTP (Eastmoney / THS / Sina / cninfo for reports, news, announcements, consensus EPS, statements — zero akshare)
-- **AI**: Anthropic Claude / OpenAI GPT (bring your own key)
-- **Storage**: JSON files (zero database dependency)
-
-## Quick Start
-
-```bash
-git clone https://github.com/simonlin1212/astock-peg.git
-cd astock-peg/web
-cp .env.example .env  # Fill in your AI API key
-npm install && npm run dev
-```
-
-Prerequisites: Node.js 18+, Python 3.10+ (Windows auto-detected, no `python3` needed), `pip install -r scripts/requirements.txt` (akshare removed in v1.1.0)
-
-## PEG Calculation
-
-```
-Forward PE = Current Price / Consensus EPS (2026)
-PEG = Forward PE / (Net Profit CAGR × 100)
-PE Digestion Years = ln(Forward PE / 30) / ln(1 + CAGR)
-```
-
-## Disclaimer
-
-This tool is for educational and research purposes only. It does not constitute investment advice. Please consult licensed professionals for investment decisions.
-
-## License
-
-Apache 2.0
-
-**Author:** Simon Lin · X [@linsizhen](https://x.com/linsizhen) · TikTok [@simonlin0423](https://www.tiktok.com/@simonlin0423) · Email: [simonlin0423@gmail.com](mailto:simonlin0423@gmail.com)
-
-</details>
